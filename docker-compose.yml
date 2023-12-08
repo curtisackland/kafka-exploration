@@ -10,6 +10,8 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
+    depends_on:
+      - zookeeper
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -26,6 +28,8 @@ services:
   chatroom:
     build: ./src
     container_name: chatroom
+    depends_on:
+      - kafka
 
 networks:
   kafka-net:
