@@ -3,7 +3,7 @@ const readline = require('readline');
 const readlineSync = require('readline-sync');
 
 const kafka = new Kafka({
-    clientId: 'my-app',
+    clientId: 'my-app' + process.argv[1],
     brokers: ['localhost:9093'],
     logLevel: logLevel.ERROR
 });
