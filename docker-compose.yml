@@ -7,6 +7,7 @@ services:
       - "2181:2181"
     networks:
       - kafka-net
+
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -21,15 +22,28 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "chatroom1:1:1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - kafka-net
 
-  chatroom:
-    build: ./src
-    container_name: chatroom
+  kafka2:
+    image: wurstmeister/kafka
+    container_name: kafka2
     depends_on:
-      - kafka
+      - kafka1
+    ports:
+      - "9094:9094"
+      - "9095:9095"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka2:9094,OUTSIDE://localhost:9095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9094,OUTSIDE://0.0.0.0:9095
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "chatroom1:2:1,latency:1:2"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - kafka-net
 
 networks:
   kafka-net:
