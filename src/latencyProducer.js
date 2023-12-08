@@ -8,7 +8,7 @@ const kafka = new Kafka({
     logLevel: logLevel.ERROR
 });
 
-const topic = 'chatroom3';
+const topic = 'chatroom1';
 const producer = kafka.producer();
 producer.connect().then();
 
@@ -30,10 +30,16 @@ function sleep(ms) {
 }
 
 async function startLatency() {
-    while(true) {
+    startTime = Date.now();
+    currentTime = Date.now();
+    // duration = 10000; // 10 seconds
+    counter = 0;
+    while(counter < 1000) {
+        counter++;
         await sleep(0.01);
         sendMessage().then();
     }
+    console.log("Done!");
 }
 
 startLatency();
