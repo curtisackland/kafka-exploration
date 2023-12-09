@@ -19,6 +19,12 @@ kafka-topics.sh --bootstrap-server kafka:9092 --topic chatroom3 --create --parti
 
 
 ## Running
+cd to src folder for these steps
+
+~~~bash
+npm install
+~~~
+
 Start consumer
 ~~~bash
 node latencyConsumer.js
