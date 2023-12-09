@@ -8,13 +8,13 @@ const kafka = new Kafka({
     logLevel: logLevel.ERROR
 });
 
+const chatroom = readlineSync.question('Enter the chatroom you would like to join (chatroom1, chatroom2, chatroom3): ');
 const userName = readlineSync.question('Enter your username: ');
-
 async function consumerFunction() {
     const consumer = kafka.consumer({ groupId: `${userName}` })
 
     await consumer.connect()
-    await consumer.subscribe({ topic: 'chatroom1', fromBeginning: true })
+    await consumer.subscribe({ topic: chatroom, fromBeginning: true })
 
     await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -28,7 +28,7 @@ async function consumerFunction() {
 const sendMessage = (msg) => {
     return producer
         .send({
-            topic,
+            topic: chatroom,
             messages: [{
                 key: `${userName}`,
                 value: new Date().getTime() + ": " + msg,
@@ -38,7 +38,6 @@ const sendMessage = (msg) => {
         .catch(e => console.error(`${e.message}`, e))
 }
 
-const topic = 'chatroom1';
 const producer = kafka.producer();
 producer.connect().then();
 
